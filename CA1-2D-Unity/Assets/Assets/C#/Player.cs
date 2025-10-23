@@ -5,12 +5,20 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed;
+    public int state = 0;
+    public float JumpHeight;
+    private bool jumping = false;
+
+    private Rigidbody2D rb;
+    Animator animator;
 
     private Vector2 startPosition;
     // Start is called before the first frame update
     void Start()
     {
         startPosition = transform.position;
+        animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();    
     }
 
     // Update is called once per frame
@@ -26,8 +34,29 @@ public class Player : MonoBehaviour
         else
         {
             position.x = position.x + (speed * Time.deltaTime * move);
-        }
-        transform.position = position;
+            if (move != 0)
+            {
+                state = move < 0 ? 1 : -1;
+                animator.SetFloat("MoveX", state);
+                animator.SetFloat("MoveY", 0);
+            }
+            else
+            {
+                animator.SetFloat("MoveY", 1);
+            }
+            transform.position = position;
 
+        }
+
+        if(Input.GetKeyDown(KeyCode.Space) && !jumping)
+        {
+            rb.AddForce(new Vector2(0, Mathf.Sqrt(-2 * Physics2D.gravity.y * JumpHeight)),
+                ForceMode2D.Impulse);
+            jumping = true;
+        }
+    }
+    public void OnCollisionEnter2D(Collider2D collision)
+    {
+        jumping = false;
     }
 }
