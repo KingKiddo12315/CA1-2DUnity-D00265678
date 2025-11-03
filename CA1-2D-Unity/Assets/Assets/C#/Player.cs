@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public int state = 0;
     public float JumpHeight;
     private bool jumping = false;
+    private int jumpcount = 0;
 
     private Rigidbody2D rb;
     Animator animator;
@@ -52,11 +53,18 @@ public class Player : MonoBehaviour
         {
             rb.AddForce(new Vector2(0, Mathf.Sqrt(-2 * Physics2D.gravity.y * JumpHeight)),
                 ForceMode2D.Impulse);
-            jumping = true;
+            jumpcount++;
+            if (jumpcount == 2)
+            {
+                jumping = true;
+            }
+            animator.SetBool("Jump", true);
         }
     }
-    public void OnCollisionEnter2D(Collider2D collision)
+    public void OnCollisionEnter2D(Collision2D collision)
     {
         jumping = false;
+        jumpcount = 0;
+        animator.SetBool("Jump", false);
     }
 }

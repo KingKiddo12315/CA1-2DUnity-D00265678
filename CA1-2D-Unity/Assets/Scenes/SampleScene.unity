@@ -261,7 +261,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 0
+  m_Constraints: 4
 --- !u!212 &1876933025
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -343,7 +343,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 3
   state: 0
-  JumpHeight: 1
+  JumpHeight: 2
 --- !u!95 &1876933028
 Animator:
   serializedVersion: 5
