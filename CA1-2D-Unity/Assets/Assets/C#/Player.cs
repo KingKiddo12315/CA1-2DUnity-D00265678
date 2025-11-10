@@ -13,6 +13,8 @@ public class Player : MonoBehaviour
     private Rigidbody2D rb;
     Animator animator;
 
+    public GameObject projectilePrefab;
+
     private Vector2 startPosition;
     // Start is called before the first frame update
     void Start()
@@ -59,6 +61,14 @@ public class Player : MonoBehaviour
                 jumping = true;
             }
             animator.SetBool("Jump", true);
+        }
+
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            GameObject projectile = Instantiate(projectilePrefab,
+                rb.position, Quaternion.identity);
+            Projectile pr = projectile.GetComponent<Projectile>();
+            pr.Launch(new Vector2(state, 0), 300);
         }
     }
     public void OnCollisionEnter2D(Collision2D collision)
