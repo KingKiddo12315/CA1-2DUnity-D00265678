@@ -5,10 +5,11 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed;
-    public int state = 0;
+    public int state = 1;
     public float JumpHeight;
     private bool jumping = false;
     private int jumpcount = 0;
+    private bool firing = false;
 
     private Rigidbody2D rb;
     Animator animator;
@@ -51,7 +52,7 @@ public class Player : MonoBehaviour
 
         }
 
-        if(Input.GetKeyDown(KeyCode.Space) && !jumping)
+        if (Input.GetKeyDown(KeyCode.Space) && !jumping)
         {
             rb.AddForce(new Vector2(0, Mathf.Sqrt(-2 * Physics2D.gravity.y * JumpHeight)),
                 ForceMode2D.Impulse);
@@ -62,14 +63,37 @@ public class Player : MonoBehaviour
             }
             animator.SetBool("Jump", true);
         }
-
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            GameObject projectile = Instantiate(projectilePrefab,
-                rb.position, Quaternion.identity);
-            Projectile pr = projectile.GetComponent<Projectile>();
-            pr.Launch(new Vector2(state, 0), 300);
+            if (!firing) { 
+                StartCoroutine(BowAttack());
+            }
         }
+
+        //if (Input.GetKeyDown(KeyCode.Q))
+        //{
+        //    animator.SetBool("Bow", true);
+        //    GameObject projectile = Instantiate(projectilePrefab,
+        //        rb.position, Quaternion.identity);
+        //    Projectile pr = projectile.GetComponent<Projectile>();
+        //    pr.Launch(new Vector2(-state, 0), 300);
+        //}
+        //else
+        //{
+        //    animator.SetBool("Bow", false);
+        //}
+    }
+    private IEnumerator BowAttack()
+    {
+        firing = true;
+        animator.SetBool("Bow", true);
+        yield return new WaitForSeconds(0.4f);
+        GameObject projectile = Instantiate(projectilePrefab,
+            rb.position, Quaternion.identity);
+        Projectile pr = projectile.GetComponent<Projectile>();
+        pr.Launch(new Vector2(-state, 0), 300);
+        animator.SetBool("Bow", false);
+        firing = false;
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {
