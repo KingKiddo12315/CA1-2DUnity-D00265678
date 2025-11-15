@@ -5,7 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float speed;
-    public int state = 1;
+    public int state = 0;
     public float JumpHeight;
     private bool jumping = false;
     private int jumpcount = 0;
@@ -101,4 +101,5 @@ public class Player : MonoBehaviour
         jumpcount = 0;
         animator.SetBool("Jump", false);
     }
+
 }
