@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public float speed;
+    public float speed = 3;
     public int state = 0;
     public float JumpHeight;
     private bool jumping = false;
@@ -85,6 +85,7 @@ public class Player : MonoBehaviour
     }
     private IEnumerator BowAttack()
     {
+        speed = 0;
         firing = true;
         animator.SetBool("Bow", true);
         yield return new WaitForSeconds(0.4f);
@@ -94,6 +95,7 @@ public class Player : MonoBehaviour
         pr.Launch(new Vector2(-state, 0), 300);
         animator.SetBool("Bow", false);
         firing = false;
+        speed = 3;
     }
     public void OnCollisionEnter2D(Collision2D collision)
     {
