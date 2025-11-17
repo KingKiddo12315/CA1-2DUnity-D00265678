@@ -6,6 +6,9 @@ TagManager:
   tags:
   - playerprojectile
   - enemyprojectile
+  - Enemy
+  - Ammo
+  - DeathWolf
   layers:
   - Default
   - TransparentFX
@@ -13,11 +16,11 @@ TagManager:
   - 
   - Water
   - UI
-  - 
-  - 
-  - 
-  - 
-  - 
+  - Player
+  - playerprojectile
+  - Enemy
+  - enemyprojectile
+  - confiner
   - 
   - 
   - 

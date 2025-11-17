@@ -18,9 +18,10 @@ public class Wolf : MonoBehaviour
     bool isIdle = false;
     public float idleTime = 2;
 
-    [SerializeField] float fireTimer = 0.5f;
+    [SerializeField] float fireTimer = 2f;
     float fireCountdown = 0;
     [SerializeField] GameObject projectilePrefab;
+    [SerializeField] Player player;
     // Start is called before the first frame update
     void Start()
     {
@@ -36,19 +37,20 @@ public class Wolf : MonoBehaviour
             if (isIdle && idleTime < 0)
             {
                 direction = direction * -1;
-                animator.SetInteger("Direction", direction);
-                animator.SetFloat("Move", direction);
                 timeInDirection = distanceTime;
                 isIdle = false;
             }
             else if (!isIdle && timeInDirection <0)
             {
+                animator.SetFloat("MoveY", 1);
                 idleTime = 2;
                 isIdle = true;
-                animator.SetFloat("Move", 0);
             }
             if(!isIdle)
             {
+
+                animator.SetFloat("MoveX", direction);
+                animator.SetFloat("MoveY", 0);
                 Vector2 pos = transform.position;
                 pos.x = pos.x + (speed * Time.deltaTime* direction);
                 transform.position = pos;
@@ -79,6 +81,7 @@ public class Wolf : MonoBehaviour
             if (dieTime < 0)
             {
                 Destroy(this.gameObject);
+                player.AddKill();
             }
         }
     }
@@ -90,7 +93,7 @@ public class Wolf : MonoBehaviour
             if(health <= 0)
             {
                 isDead = true;
-                animator.SetBool("isDead", true);
+                animator.SetBool("Dead", true);
             }
         }
     }
