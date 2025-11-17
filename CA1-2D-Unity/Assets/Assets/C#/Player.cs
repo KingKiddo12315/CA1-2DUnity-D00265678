@@ -16,9 +16,10 @@ public class Player : MonoBehaviour
     private bool firing = false;
     public int lifes = 3;
     public int totalArrows = 20;
-    private int arrows = 5;
+    private int arrows = 10;
     private bool Dead = false;
     float dieTime = 1;
+    bool victory = false;
 
     public int totalkill;
     private int kill = 0;
@@ -34,7 +35,7 @@ public class Player : MonoBehaviour
     [SerializeField] TMP_Text TotalKills;
     [SerializeField] Image timer;
     [SerializeField] DeathWolf deathWolf;
-    private float totalTime = 30f;
+    private float totalTime = 120f;
     private float currentTime = 0;
     // Start is called before the first frame update
     void Start()
@@ -53,71 +54,78 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        currentTime -=Time.deltaTime;
-        timer.fillAmount = currentTime / totalTime;
-        if(currentTime < 10)
+        if (!victory)
         {
-            timer.color = Color.blue;
-        }
-        if(currentTime < 0)
-        {
-            deathWolf.wakeUpWolf();
-        }
-
-        Vector2 position = transform.position;
-        if (!Dead)
-        {
-            float move = Input.GetAxis("Horizontal");
-
-            if (position.y < -10.5)
+            currentTime -= Time.deltaTime;
+            timer.fillAmount = currentTime / totalTime;
+            if (currentTime < 10)
             {
-                position = startPosition;
+                timer.color = Color.blue;
             }
-            else
+            if (currentTime < 0)
             {
-                position.x = position.x + (speed * Time.deltaTime * move);
-                if (move != 0)
+                deathWolf.wakeUpWolf();
+            }
+
+            Vector2 position = transform.position;
+            if (!Dead)
+            {
+                float move = Input.GetAxis("Horizontal");
+
+                if (position.y < -10.5)
                 {
-                    state = move < 0 ? 1 : -1;
-                    animator.SetFloat("MoveX", state);
-                    animator.SetFloat("MoveY", 0);
+                    position = startPosition;
                 }
                 else
                 {
-                    animator.SetFloat("MoveY", 1);
-                }
-                transform.position = position;
+                    position.x = position.x + (speed * Time.deltaTime * move);
+                    if (move != 0)
+                    {
+                        state = move < 0 ? 1 : -1;
+                        animator.SetFloat("MoveX", state);
+                        animator.SetFloat("MoveY", 0);
+                    }
+                    else
+                    {
+                        animator.SetFloat("MoveY", 1);
+                    }
+                    transform.position = position;
 
-            }
-
-            if (Input.GetKeyDown(KeyCode.Space) && !jumping)
-            {
-                rb.AddForce(new Vector2(0, Mathf.Sqrt(-2 * Physics2D.gravity.y * JumpHeight)),
-                    ForceMode2D.Impulse);
-                jumpcount++;
-                if (jumpcount == 2)
-                {
-                    jumping = true;
                 }
-                animator.SetBool("Jump", true);
-            }
-            if (Input.GetKeyDown(KeyCode.Q) && arrows > 0)
-            {
-                if (!firing)
+
+                if (Input.GetKeyDown(KeyCode.Space) && !jumping)
                 {
-                    StartCoroutine(BowAttack());
-                    arrows--;
-                    TotalArrows.text = arrows + "/" + totalArrows;
+                    rb.AddForce(new Vector2(0, Mathf.Sqrt(-2 * Physics2D.gravity.y * JumpHeight)),
+                        ForceMode2D.Impulse);
+                    jumpcount++;
+                    if (jumpcount == 2)
+                    {
+                        jumping = true;
+                    }
+                    animator.SetBool("Jump", true);
+                }
+                if (Input.GetKeyDown(KeyCode.Q) && arrows > 0)
+                {
+                    if (!firing)
+                    {
+                        StartCoroutine(BowAttack());
+                        arrows--;
+                        TotalArrows.text = arrows + "/" + totalArrows;
+                    }
+                }
+            }
+            else
+            {
+                dieTime -= Time.deltaTime;
+                if (dieTime < 0)
+                {
+                    life.ToggleRestart(lifes);
                 }
             }
         }
-        else
+        else if (victory == true)
         {
-            dieTime -= Time.deltaTime;
-            if (dieTime < 0)
-            {
-                life.ToggleRestart(lifes);
-            }
+            life.victoryText(victory);
         }
     }
     private IEnumerator BowAttack()
@@ -170,5 +178,9 @@ public class Player : MonoBehaviour
     {
         kill++;
         TotalKills.text = kill + "/" + totalkill;
+        if (kill == 5)
+        {
+            victory = true;
+        }
     }
 }

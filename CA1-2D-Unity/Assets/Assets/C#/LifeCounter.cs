@@ -1,20 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 public class LifeCounter : MonoBehaviour
 {
-    //public Text scoreText;
     public Image[] images;
     public Button button;
-    //public void SetScore(int score)
-    //{
-    //    scoreText.text = score.ToString();
-    //}
+    public TMP_Text congrats;
     void Start()
     {
         button = GameObject.Find("Button").GetComponent<Button>();
         button.gameObject.SetActive(false);
+        congrats = GameObject.Find("victory").GetComponent<TMP_Text>();
+        congrats.gameObject.SetActive(false);
     }
 
     public void UpdateLifes(int lifes)
@@ -50,5 +49,10 @@ public class LifeCounter : MonoBehaviour
         {
             button.gameObject.SetActive(true);
         }
+    }
+    public void victoryText(bool victory)
+    {
+               button.gameObject.SetActive(true);
+        congrats.gameObject.SetActive(victory);
     }
 }
